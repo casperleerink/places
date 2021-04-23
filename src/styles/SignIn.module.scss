@@ -1,0 +1,48 @@
+@import "./variables";
+.container {
+  display: block;
+  width: 100%;
+  // padding: 1rem;
+}
+
+.error {
+  background-color: $error-background;
+}
+
+.form {
+  display: block;
+  label {
+    padding: 0.5rem 0;
+    display: block;
+    color: $primary;
+    font-size: 0.7em;
+    input {
+      display: block;
+      width: 100%;
+      color: $primary;
+      font-size: 1rem;
+      border: none;
+      padding: 0.7rem;
+      margin: 0.2rem 0;
+      background-color: $tertiary;
+      :focus {
+        /* when user clicks on input field */
+        border: 1px solid $secondary;
+        outline: none;
+      }
+    }
+  }
+}
+
+.button {
+  border: none;
+  padding: 0.5rem 0.7rem;
+  margin: 1rem 0;
+  border-radius: 1rem;
+  border: 1px solid $accent;
+  color: $accent;
+  background-color: inherit;
+  // font-weight: bold;
+  font-size: 1em;
+  cursor: pointer;
+}
