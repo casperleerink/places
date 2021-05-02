@@ -14,9 +14,13 @@ function AccountMenu() {
   const modifyItemRef = useRef(null);
 
   useEffect(() => {
+    let isMounted = true;
     getDocument("users", user.uid).then((userDoc) => {
-      setUserInfo(userDoc);
+      if (isMounted) {
+        setUserInfo(userDoc);
+      }
     });
+    return () => (isMounted = false);
   }, [user]);
   const handleLogOut = () => {
     logOut();
