@@ -41,6 +41,11 @@
     outline: none;
   }
 }
+.form-item input::placeholder {
+  color: $primary;
+  font-size: 1rem;
+  opacity: 0.5;
+}
 .input-error {
   border: 1px solid $error;
 }

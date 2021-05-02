@@ -4,33 +4,56 @@
   width: 100%;
   padding: 1rem;
 }
+.hello {
+  padding-top: 0.6rem;
+  margin: 0;
+  font-size: 1.2rem;
+  // padding: 0.2rem 0;
+}
 .heading {
   display: flex;
   justify-content: space-between;
-  flex-direction: row-reverse;
+  // flex-direction: row-reverse;
   align-items: center;
   padding-bottom: 1rem;
   margin-top: 2rem;
   .button {
     border: 1px solid $primary;
     padding: 0.4rem 0.8rem;
+    margin-right: 0.5rem;
     /* margin: 1rem 0; */
     border-radius: 1rem;
     background-color: inherit;
     color: inherit;
     font-weight: 200;
-    font-size: 0.7em;
+    font-size: 0.8em;
     cursor: pointer;
-    transition: padding 0.3s;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    &:hover {
+      padding: 0.4rem 1rem;
+      background-color: $tertiary;
+      border-color: $dark;
+    }
+    &.accent {
+      color: $secondary;
+      border: 1px solid $secondary;
+      &:hover {
+        background-color: $secondary;
+        color: $dark;
+        border: 1px solid $dark;
+      }
+    }
   }
-}
-.button:hover {
-  padding: 0.5rem 0.8rem;
 }
 .expand-button {
   display: flex;
   border: none;
   width: 100%;
+  font-weight: bold;
+  text-transform: uppercase;
   justify-content: space-between;
   align-items: center;
   background-color: $tertiary;
@@ -50,6 +73,6 @@
   width: 100%;
 
   .animated-div {
-    overflow-y: hidden;
+    transform-origin: top;
   }
 }

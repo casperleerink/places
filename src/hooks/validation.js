@@ -68,3 +68,18 @@ export const signUpValidation = {
   Email: EmailValidation,
   Password: PasswordValidation,
 };
+
+export const newItemValidation = (values) => {
+  const { title, photo, location } = values;
+  if (!title) {
+    return "Please fill in a title for your photo.";
+  }
+  if (!photo) {
+    return "Please upload a photo before submitting.";
+  }
+  if (!location) {
+    return "Please choose a location where the photo was taken by clicking on the map.";
+  }
+
+  return "passed";
+};

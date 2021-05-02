@@ -41,7 +41,7 @@ initializeApp({
   measurementId: "G-T2WG3Y2P33",
 });
 
-const db = getFirestore(); //firestore database
+export const db = getFirestore(); //firestore database
 
 export const signUp = async (email, password, username) => {
   const auth = getAuth();
@@ -100,15 +100,16 @@ export const getDocument = async (coll, id) => {
 
 export const getDocuments = async (query) => {
   if (!query) return null;
-  const snapshot = await getDocs(query);
-  return snapshot.map((doc) => {
-    return { id: doc.id, ...doc.data() };
+  const querySnapshot = await getDocs(query);
+  const results = [];
+  querySnapshot.forEach((doc) => {
+    results.push({ id: doc.id, data: doc.data() });
   });
+  return results;
 };
 
-export const uploadImage = (file) => {
+export const uploadImage = (file, extension) => {
   const storage = getStorage();
-  const extension = file.name.split(".").pop();
   const fileName = `${uuid()}.${extension}`;
   const storageRef = ref(storage, `images/${fileName}`);
   const uploadTask = uploadBytesResumable(storageRef, file);

@@ -1,0 +1,64 @@
+@import "./variables";
+.dropContainer {
+  display: flex;
+  width: 100%;
+  min-height: 200px;
+  background-color: $tertiary;
+  margin: 1rem 0;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  position: relative;
+  p {
+    margin: 0.2rem;
+  }
+  em {
+    font-size: 0.7em;
+  }
+  label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    font-size: 1em;
+    color: $accent;
+    border: 1px solid $accent;
+    padding: 0.3rem 0.7rem;
+    border-radius: 1rem;
+    input {
+      display: none;
+    }
+  }
+  .image {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    position: relative;
+    padding: 1rem 0;
+    .deleteIcon {
+      box-sizing: content-box;
+      padding: 1rem;
+      font-size: 3em;
+      color: $primary;
+      opacity: 0.7;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+    }
+    img {
+      width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  .image:hover {
+    .deleteIcon {
+      opacity: 0.7;
+    }
+  }
+}

@@ -1,22 +1,18 @@
-import React, { useContext, useEffect, useState } from "react";
-import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
+import React, { useContext, useEffect, useState, useRef } from "react";
+import { AiOutlineLogout, AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import { UserContext } from "./UserContext";
 import { logOut, getDocument } from "../hooks/firebase";
-import NewItemForm from "./NewItemForm";
 import style from "../styles/AccountMenu.module.scss";
-import { useTransition, animated as a, config } from "react-spring";
+// import { useTransition, animated as a, config } from "react-spring";
+import UserItemsList from "./UserItemsList";
+import HandleItemForm from "./HandleItemForm";
 function AccountMenu() {
   const [userInfo, setUserInfo] = useState({});
   const [newItemExpanded, setNewItemExpanded] = useState(false);
-  const [photoListExpanded, setPhotoListExpanded] = useState(false);
-  const user = useContext(UserContext);
+  const [modifyItem, setModifyItem] = useState(null);
+  const { user } = useContext(UserContext);
+  const modifyItemRef = useRef(null);
 
-  const transitions = useTransition(newItemExpanded, {
-    from: { maxHeight: 0 },
-    enter: { maxHeight: 800 },
-    leave: { maxHeight: 0 },
-    config: config.slow,
-  });
   useEffect(() => {
     getDocument("users", user.uid).then((userDoc) => {
       setUserInfo(userDoc);
@@ -25,41 +21,43 @@ function AccountMenu() {
   const handleLogOut = () => {
     logOut();
   };
+  const handleItemEdit = (item) => {
+    setModifyItem(item);
+    modifyItemRef.current.scrollIntoView({ behavior: "smooth" });
+  };
   return (
     <div className={style.container}>
+      <h1 className={style.hello}>
+        {userInfo.username ? `Hi ${userInfo.username}` : `Hi!`}
+      </h1>
       <nav className={style.heading}>
-        {userInfo.username ? <h1>{`Hi ${userInfo.username}`}</h1> : ""}
+        <button
+          className={`${style.button} ${style.accent}`}
+          onClick={() => setNewItemExpanded(!newItemExpanded)}
+        >
+          {newItemExpanded ? <AiOutlineMinus /> : <AiOutlinePlus />}
+          New Item
+        </button>
         <button onClick={handleLogOut} className={style.button}>
-          Logout
+          <AiOutlineLogout /> Logout
         </button>
       </nav>
       <div className={style["new-item"]}>
-        <button
-          onClick={() => setNewItemExpanded(!newItemExpanded)}
-          className={style["expand-button"]}
-        >
-          <p>Upload New Photo</p>
-          {newItemExpanded ? <AiOutlineUp /> : <AiOutlineDown />}
-        </button>
-        {transitions((styles, item) => {
-          return (
-            item && (
-              <a.div style={styles} className={style["animated-div"]}>
-                <NewItemForm className={style.form} />
-              </a.div>
-            )
-          );
-        })}
+        {newItemExpanded && (
+          <HandleItemForm
+            onSuccess={() => setNewItemExpanded(!newItemExpanded)}
+          />
+        )}
       </div>
-      <div className={style["photo-list"]}>
-        <button
-          onClick={() => setPhotoListExpanded(!photoListExpanded)}
-          className={style["expand-button"]}
-        >
-          <p>Photos</p>
-          {photoListExpanded ? <AiOutlineUp /> : <AiOutlineDown />}
-        </button>
+      <div ref={modifyItemRef}>
+        {modifyItem && (
+          <HandleItemForm
+            item={modifyItem}
+            onSuccess={() => setModifyItem(!modifyItem)}
+          />
+        )}
       </div>
+      <UserItemsList onEdit={handleItemEdit} />
     </div>
   );
 }

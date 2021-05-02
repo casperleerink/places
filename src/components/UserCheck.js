@@ -4,7 +4,7 @@ import { UserContext } from "./UserContext";
 import LogInOrSignUp from "./LogInOrSignUp";
 
 function UserCheck() {
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
   return user ? <AccountMenu /> : <LogInOrSignUp />;
 }
 

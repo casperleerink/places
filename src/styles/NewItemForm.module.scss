@@ -7,6 +7,18 @@
   display: block;
   width: 100%;
 }
+.created {
+  background-color: $success-background;
+  padding: 1rem;
+  width: 100%;
+  text-align: center;
+}
+.error {
+  background-color: $error-background;
+  padding: 1rem;
+  width: 100%;
+  text-align: center;
+}
 .form-item {
   padding: 0.5rem 0;
   display: block;
@@ -27,62 +39,34 @@
       outline: none;
     }
   }
-}
-
-.dropContainer {
-  display: flex;
-  width: 100%;
-  min-height: 200px;
-  background-color: $tertiary;
-  margin: 1rem 0;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  text-align: center;
-  position: relative;
-  p {
-    margin: 0.2rem;
+  input::placeholder {
+    color: $primary;
+    font-size: 1rem;
+    opacity: 0.5;
   }
-  em {
-    font-size: 0.7em;
-  }
-  label {
-    cursor: pointer;
-    margin-top: 0.5rem;
-    font-size: 1em;
-    color: $accent;
-    border: 1px solid $accent;
-    padding: 0.3rem 0.5rem;
-    border-radius: 1rem;
-    input {
-      display: none;
-    }
-  }
-  .image {
-    display: flex;
+  textarea {
+    font-family: "Raleway", sans-serif;
+    display: block;
     width: 100%;
-    justify-content: center;
-    img {
-      width: 50%;
-    }
+    color: $primary;
+    font-size: 1rem;
+    border: none;
+    padding: 0.7rem;
+    margin: 0.2rem 0;
+    background-color: $tertiary;
   }
-}
-
-.form-description textarea {
-  font-family: "Raleway", sans-serif;
-  display: block;
-  width: 100%;
-  color: $primary;
-  font-size: 1rem;
-  border: none;
-  padding: 0.7rem;
-  margin: 0.2rem 0;
-  background-color: $tertiary;
+  textarea::placeholder {
+    color: $primary;
+    font-size: 1rem;
+    opacity: 0.5;
+  }
 }
 
 .button {
+  display: flex;
+  align-items: center;
   border: none;
-  padding: 0.5rem 0.7rem;
+  padding: 0.7rem 1.1rem;
   margin: 1rem 0;
   border-radius: 1rem;
   border: 1px solid $accent;
@@ -91,7 +75,8 @@
   // font-weight: bold;
   font-size: 1em;
   cursor: pointer;
-}
-.button:hover {
-  padding: 0.5rem 1rem;
+  transition: padding 0.3s ease;
+  &:hover {
+    padding: 0.7rem 1.5rem;
+  }
 }
