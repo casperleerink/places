@@ -29,7 +29,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/casperleerink/places">
-    <img src="public/android-chrome-512x512.png" alt="Logo" width="80" height="80">
+    <img src="public/android-chrome-512x512.png" alt="Logo" width="150" height="150">
   </a>
 
   <h3 align="center">Places</h3>
@@ -65,9 +65,7 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>x
-    <li><a href="#license">License</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
@@ -76,7 +74,7 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](public/android-chrome-192x192.png)
+<img align="center" src="public/android-chrome-512x512.png" alt="Logo" width="80" height="80">
 
 Places is a project where people can upload photos and videos of unnoticed or beautiful things all around them. People can see these photos on a map that shows where these photo's were taken.
 
@@ -114,23 +112,11 @@ To get a local copy up and running follow these simple steps.
    npm run start
    ```
 
-<!-- USAGE EXAMPLES -->
-
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
 <!-- ROADMAP -->
 
 ## Roadmap
 
 See the [open issues](https://github.com/casperleerink/places/issues) for a list of proposed features (and known issues).
-
-<!-- LICENSE -->
-
-## License
-
-Distributed under the MIT License. See `LICENSE` for more information.
 
 <!-- CONTACT -->
 
