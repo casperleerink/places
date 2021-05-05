@@ -143,13 +143,13 @@ Project Link: [https://places-45dcd.web.app/](https://places-45dcd.web.app/)
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[contributors-shield]: https://img.shields.io/github/contributors/casperleerink/repo.svg?style=for-the-badge
-[contributors-url]: https://github.com/casperleerink/repo/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/casperleerink/repo.svg?style=for-the-badge
-[forks-url]: https://github.com/casperleerink/repo/network/members
-[stars-shield]: https://img.shields.io/github/stars/casperleerink/repo.svg?style=for-the-badge
-[stars-url]: https://github.com/casperleerink/repo/stargazers
-[issues-shield]: https://img.shields.io/github/issues/casperleerink/repo.svg?style=for-the-badge
-[issues-url]: https://github.com/casperleerink/repo/issues
+[contributors-shield]: https://img.shields.io/github/contributors/casperleerink/places.svg?style=for-the-badge
+[contributors-url]: https://github.com/casperleerink/places/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/casperleerink/places.svg?style=for-the-badge
+[forks-url]: https://github.com/casperleerink/places/network/members
+[stars-shield]: https://img.shields.io/github/stars/casperleerink/places.svg?style=for-the-badge
+[stars-url]: https://github.com/casperleerink/places/stargazers
+[issues-shield]: https://img.shields.io/github/issues/casperleerink/places.svg?style=for-the-badge
+[issues-url]: https://github.com/casperleerink/places/issues
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/casperleerink
+[linkedin-url]: https://www.linkedin.com/in/casper-leerink-551392aa/
