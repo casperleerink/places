@@ -4,17 +4,9 @@ import style from "../styles/NewItemForm.module.scss";
 import ImageField from "./ImageField";
 import LocationField from "./LocationField";
 
-function ItemForm({
-  onSubmit,
-  onChange,
-  values,
-  error,
-  success,
-  center = null,
-}) {
+function ItemForm({ onSubmit, onChange, values, error, center = null }) {
   return (
     <form className={style.form}>
-      {success && <div className={style.created}>{success}</div>}
       {error && <div className={style.error}>{error}</div>}
       <label className={style["form-item"]}>
         <p>Title*</p>
@@ -31,20 +23,17 @@ function ItemForm({
         photo={values.photo}
         photoUrl={values.photoUrl}
         thumb={values.thumb}
-        onUploadComplete={(name, url) => {
-          onChange({ photo: name, photoUrl: url });
+        onChange={onChange}
+        onPhotoLocation={(l) => {
+          onChange({ location: l });
         }}
-        onThumbUploadComplete={(name, url) => {
-          onChange({ thumb: name, thumbUrl: url });
+      />
+      <LocationField
+        loc={values.location}
+        onMapClick={(l) => {
+          onChange({ location: l });
         }}
-        onDelete={() => {
-          onChange({
-            photo: "",
-            photoUrl: "",
-            thumbUrl: "",
-            thumb: "",
-          });
-        }}
+        center={center ? center : null}
       />
       <label className={style["form-item"]}>
         <p>Description</p>
@@ -58,13 +47,6 @@ function ItemForm({
           }}
         />
       </label>
-      <LocationField
-        loc={values.location}
-        onMapClick={(l) => {
-          onChange({ location: l });
-        }}
-        center={center ? center : null}
-      />
       <div>
         <button className={style.button} onClick={onSubmit}>
           <AiOutlineSend />

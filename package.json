@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^12.8.3",
     "cloudinary": "^1.25.1",
     "cloudinary-core": "^2.11.4",
+    "exifr": "^6.2.0",
     "firebase": "^9.0.0-beta.1",
     "geofire-common": "^5.2.0",
     "node-sass": "5.0",

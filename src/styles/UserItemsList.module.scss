@@ -10,13 +10,14 @@
   padding: 0;
   list-style-type: none;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
   // align-items: stretch;
   // justify-content: space-between;
   gap: 1.5rem;
   .user-item {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: space-around;
     align-items: center;
     padding: 0.5rem;
     height: 12rem;
@@ -42,13 +43,21 @@
       z-index: 1;
       transition: opacity 200ms ease;
     }
-    h1 {
+    button {
+      all: unset;
       display: block;
-      text-align: center;
-      padding: 0 0.5rem;
-      font-size: 1.7em;
       z-index: 1;
-      opacity: 0.8;
+      cursor: pointer;
+      h1 {
+        display: block;
+        min-width: 100%;
+        text-align: center;
+        padding: 0 0.5rem;
+        font-size: 1.3em;
+        max-width: 80%;
+        // z-index: 1;
+        opacity: 0.8;
+      }
     }
   }
 }
@@ -74,8 +83,8 @@
   .menu {
     // display: none;
     position: absolute;
-    right: 90%;
-    top: 0;
+    left: 0%;
+    top: 100%;
     width: 200%;
     list-style-type: none;
     background-color: $primary;
@@ -107,26 +116,5 @@
 }
 
 .confirm-container {
-  text-align: center;
-  width: 300px;
-  border-radius: 1rem;
-  background-color: $primary-background;
-  box-shadow: 0 20px 75px rgba(0, 0, 0, 0.23);
-  color: $dark;
-  padding: 1rem;
-  p {
-    padding: 0.5rem 0;
-  }
-  button {
-    border: 1px solid $dark;
-    background-color: inherit;
-    color: inherit;
-    padding: 0.5rem 1rem;
-    margin: 0 1rem;
-    border-radius: 1rem;
-    cursor: pointer;
-    &:nth-child(2n) {
-      background-color: $error-background;
-    }
-  }
+  @include confirm();
 }

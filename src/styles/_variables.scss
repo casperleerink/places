@@ -1,5 +1,6 @@
-$primary: rgb(245, 238, 222);
+$primary: #f5eede;
 $primary-background: rgba(245, 238, 222, 0.9);
+$primary-darker: #dfdace;
 $secondary: #a1d3ab;
 $tertiary: #174f61;
 $accent: #f5bc39;
@@ -13,5 +14,30 @@ $large: 1000px;
 @mixin mq($size) {
   @media only screen and (min-width: $size) {
     @content;
+  }
+}
+
+@mixin confirm() {
+  text-align: center;
+  width: 300px;
+  border-radius: 1rem;
+  background-color: $primary-background;
+  box-shadow: 0 20px 75px rgba(0, 0, 0, 0.23);
+  color: $dark;
+  padding: 1rem;
+  p {
+    padding: 0.5rem 0;
+  }
+  button {
+    border: 1px solid $dark;
+    background-color: inherit;
+    color: inherit;
+    padding: 0.5rem 1rem;
+    margin: 0 1rem;
+    border-radius: 1rem;
+    cursor: pointer;
+    &:nth-child(2n) {
+      background-color: $error-background;
+    }
   }
 }

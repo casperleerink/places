@@ -2,47 +2,52 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import { UserContext } from "./UserContext";
 import ItemForm from "./ItemForm";
 import { geohashForLocation } from "geofire-common";
-import { generateDocument } from "../hooks/firebase";
+import { generateDocument, db } from "../hooks/firebase";
 import { newItemValidation } from "../hooks/validation";
-import { GeoPoint, Timestamp } from "firebase/firestore";
-function HandleItemForm({ item, onSuccess }) {
-  const [values, setValues] = useState({
-    title: item ? item.data.title : "",
-    photo: item ? item.data.photo : "",
-    photoUrl: item ? item.data.photoUrl : "",
-    thumb: item ? item.data.thumb : "",
-    thumbUrl: item ? item.data.thumbUrl : "",
-    description: item ? item.data.description : "",
-    location: item
-      ? { lat: item.data.location.latitude, lng: item.data.location.longitude }
-      : null,
+import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
+import Resizer from "react-image-file-resizer";
+import {
+  getStorage,
+  ref,
+  uploadString,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
+
+//helper function
+const resizeFile = (file) =>
+  new Promise((resolve) => {
+    Resizer.imageFileResizer(file, 30, 30, "PNG", 100, 0, (uri) => {
+      resolve(uri);
+    });
   });
-  const [success, setSuccess] = useState("");
+
+//main component
+function HandleItemForm({ item, onSuccess }) {
+  const { data, id } = item ? item : { data: null, id: null };
+  const [values, setValues] = useState({
+    title: data ? data.title : "",
+    photo: data ? data.photo : "",
+    photoUrl: data ? data.photoUrl : "",
+    photoFile: null,
+    description: data ? data.description : "",
+    location: data ? data.location : null,
+  });
   const [error, setError] = useState("");
   const { user } = useContext(UserContext);
   const formRef = useRef(null);
   useEffect(() => {
-    if (item) {
-      const {
-        title,
-        photoName,
-        photoUrl,
-        thumb,
-        thumbUrl,
-        description,
-        location,
-      } = item.data;
+    if (data) {
+      const { title, photo, photoUrl, description, location } = data;
       setValues({
         title,
-        photo: photoName,
+        photo,
         photoUrl,
-        thumb,
-        thumbUrl,
         description,
-        location: { lat: location.latitude, lng: location.longitude },
+        location,
       });
     }
-  }, [item]);
+  }, [data]);
 
   //update values functions:
   const handleChange = (data) => {
@@ -51,8 +56,10 @@ function HandleItemForm({ item, onSuccess }) {
     });
   };
   //submit new item
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    //first validate
     const result = newItemValidation(values);
     if (result !== "passed") {
       //didn't pass validation
@@ -60,46 +67,58 @@ function HandleItemForm({ item, onSuccess }) {
       formRef.current.scrollIntoView({ behavior: "smooth" });
       return;
     }
-
-    const data = {
+    //all the data to be uploaded to the document (excluding photo stuff)
+    const documentData = {
       userId: user.uid,
-      uploadDate: Timestamp.now(),
+      uploadDate: serverTimestamp(),
       title: values.title,
-      photoName: values.photo,
-      photoUrl: values.photoUrl,
-      thumbUrl: values.thumbUrl,
-      location: new GeoPoint(values.location.lat, values.location.lng),
+      location: values.location,
+      description: values.description,
       geohash: geohashForLocation([values.location.lat, values.location.lng]),
-      description: values.description ? values.description : null,
     };
-    if (item) {
-      generateDocument("items", item.id, data).then((id) => {
-        error && setError("");
-        setSuccess("Item updated successfully!");
-        formRef.current.scrollIntoView({ behavior: "smooth" });
+    //then upload photo
+    if (values.photoFile) {
+      //values.photoFile only exists if new photo is chosen by user
+      try {
+        const storage = getStorage();
+        //create thumbnail
+        const uri = await resizeFile(values.photoFile);
+        const fileName = `thumb_${values.photo.replace(/\.[^/.]+$/, "")}.png`;
+        const thumbRef = ref(storage, `images/${fileName}`);
+        const thumbSnapshot = await uploadString(thumbRef, uri, "data_url");
+        documentData.thumb = fileName;
+        documentData.thumbUrl = await getDownloadURL(thumbSnapshot.ref);
+        //upload main image
+        const storageRef = ref(storage, `images/${values.photo}`);
+        const snapshot = await uploadBytes(storageRef, values.photoFile);
+        documentData.photo = values.photo;
+        documentData.photoUrl = await getDownloadURL(snapshot.ref);
+      } catch (e) {
+        setError(`Error uploading image: ${e.code}`);
+        return; //do not proceed with document upload if photo upload gave error
+      }
+    }
+
+    //then upload document either update or create new one
+    if (id) {
+      //update item form
+      try {
+        const itemRef = doc(db, "items", id);
+        await updateDoc(itemRef, { ...documentData });
         onSuccess();
-      });
+      } catch (e) {
+        setError(`Error updating item: ${e}`);
+        formRef.current.scrollIntoView({ behavior: "smooth" });
+      }
     } else {
-      generateDocument("items", null, data)
-        .then((id) => {
-          error && setError(""); //remove error
-          setValues({
-            title: "",
-            photo: "",
-            photoUrl: "",
-            thumb: "",
-            thumbUrl: "",
-            description: "",
-            location: null,
-          });
-          setSuccess("Item added successfully!");
-          formRef.current.scrollIntoView({ behavior: "smooth" });
-          onSuccess();
-        })
-        .catch((e) => {
-          setError(`Error creating new item: ${e.code}`);
-          formRef.current.scrollIntoView({ behavior: "smooth" });
-        });
+      //new item form
+      try {
+        await generateDocument("items", null, documentData);
+        onSuccess();
+      } catch (e) {
+        setError(`Error creating new item: ${e.code}`);
+        formRef.current.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
   return (
@@ -112,15 +131,7 @@ function HandleItemForm({ item, onSuccess }) {
         onChange={handleChange}
         values={values}
         error={error}
-        success={success}
-        center={
-          item
-            ? {
-                lat: item.data.location.latitude,
-                lng: item.data.location.longitude,
-              }
-            : null
-        }
+        center={data ? data.location : null}
       />
     </div>
   );

@@ -1,17 +1,19 @@
 @import "./variables";
 .container {
-  position: absolute;
+  position: fixed;
   padding: 1rem;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1;
+  z-index: 20;
   background-color: $primary-background;
+  color: $dark;
   min-height: 100vh;
+  overflow-y: scroll;
+  max-height: 100vh;
   @include mq($medium) {
-    width: calc(100% - 400px);
-    max-height: 100vh;
-    overflow-y: scroll;
+    // width: calc(100vw - 400px);
+    // left: 0;
   }
   .close {
     // padding: 0.3rem;
@@ -28,9 +30,13 @@
 }
 
 .show-data {
-  display: block;
+  display: flex;
   width: 100%;
   text-align: center;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0;
   // background-color: $secondary;
   h1 {
     padding-top: 1rem;
@@ -39,13 +45,25 @@
   .owner {
     font-size: 0.8rem;
     padding: 0.5rem 0;
+    button {
+      border: none;
+      background-color: inherit;
+      text-decoration: underline;
+      color: inherit;
+      font-size: inherit;
+      text-emphasis: inherit;
+      cursor: pointer;
+      padding: 0 0.5rem;
+    }
   }
   .desc {
     padding: 1rem 0;
-    text-align: left;
+    // text-align: left;
   }
   img {
     border-radius: 1rem;
     box-shadow: 0 2px 1.5rem rgba(33, 33, 33, 0.2);
+    width: 100%;
+    max-width: 550px;
   }
 }

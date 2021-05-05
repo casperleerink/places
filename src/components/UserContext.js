@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext } from "react";
+import React, { useState, useEffect, createContext, useMemo } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export const UserContext = createContext({
@@ -36,8 +36,9 @@ function UserProvider({ children }) {
       });
     return () => (isMounted = false);
   }, []);
+  const providerValue = useMemo(() => ({ user, location }), [user, location]);
   return (
-    <UserContext.Provider value={{ user, location }}>
+    <UserContext.Provider value={providerValue}>
       {children}
     </UserContext.Provider>
   );

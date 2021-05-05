@@ -5,7 +5,7 @@ import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import useOutsideDetect from "../hooks/useOutsideDetect";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
-function UserItem({ data, id, onEdit, onDelete }) {
+function UserItem({ data, id, onEdit, onDelete, onShow }) {
   const [showMenu, setShowMenu] = useState(false);
   const ref = useRef(null);
   useOutsideDetect(ref, () => setShowMenu(false));
@@ -20,7 +20,7 @@ function UserItem({ data, id, onEdit, onDelete }) {
             <button onClick={onClose}>Cancel</button>
             <button
               onClick={() => {
-                onDelete();
+                onDelete(id);
                 onClose();
               }}
             >
@@ -37,7 +37,9 @@ function UserItem({ data, id, onEdit, onDelete }) {
       className={style["user-item"]}
       style={{ backgroundImage: `url(${data.photoUrl})` }}
     >
-      <h1>{data.title}</h1>
+      <button onClick={() => onShow(data)}>
+        <h1>{data.title}</h1>
+      </button>
       <div className={style["item-menu"]}>
         <BsThreeDots onClick={() => setShowMenu(!showMenu)} />
         {showMenu && (

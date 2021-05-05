@@ -69,6 +69,16 @@ export const signUpValidation = {
   Password: PasswordValidation,
 };
 
+export const imageValidation = (file) => {
+  if (file === "" || file.type.match(/image\/.+/) === null) {
+    return "Not the correct filetype, please upload an image JPG or PNG";
+  }
+  if (file.size > 2097152) {
+    return "Image size exceeds maximum file size of 2MB";
+  }
+  return "passed";
+};
+
 export const newItemValidation = (values) => {
   const { title, photo, location } = values;
   if (!title) {
@@ -82,4 +92,13 @@ export const newItemValidation = (values) => {
   }
 
   return "passed";
+};
+
+export const useSameEmailValidation = (email1, email2) => {
+  const [valid, setValid] = useState(true);
+  useEffect(() => {
+    email1 === email2 ? setValid(true) : setValid(false);
+  }, [email1, email2]);
+
+  return valid;
 };

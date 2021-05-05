@@ -1,37 +1,47 @@
 import React, { useState, useEffect, useContext } from "react";
-import { query, collection, where, doc, deleteDoc } from "firebase/firestore";
-import { db, getDocuments } from "../hooks/firebase";
+import {
+  query,
+  collection,
+  where,
+  doc,
+  deleteDoc,
+  onSnapshot,
+} from "firebase/firestore";
+import { db } from "../hooks/firebase";
 import { UserContext } from "./UserContext";
 import style from "../styles/UserItemsList.module.scss";
 import UserItem from "./UserItem";
+import ShowItem from "./ShowItem";
 function UserItemsList({ onEdit }) {
   const [items, setItems] = useState([]);
   const [error, setError] = useState("");
+  const [showFullItem, setShowFullItem] = useState(null);
   const { user } = useContext(UserContext);
   useEffect(() => {
-    getUserDocuments(user);
-  }, [user]);
-
-  const getUserDocuments = (user) => {
     if (user) {
       const q = query(collection(db, "items"), where("userId", "==", user.uid));
-
-      getDocuments(q)
-        .then((results) => {
-          setItems(results);
-        })
-        .catch((e) => {
-          setError(`Failed to get items: ${e.code}`);
-        });
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        try {
+          const currentDocs = [];
+          querySnapshot.forEach((doc) => {
+            currentDocs.push({ data: doc.data(), id: doc.id });
+          });
+          setItems(currentDocs);
+        } catch (e) {
+          setError(`Something went wrong trying to get your items: ${e}`);
+        }
+      });
+      return () => unsubscribe();
     }
-  };
+  }, [user]);
 
   const handleDelete = async (id) => {
-    //delete item and preferably re-read the documents
-    console.log(id);
     const docRef = doc(db, "items", id);
     await deleteDoc(docRef);
-    getUserDocuments(user);
+  };
+  const handleShow = (data) => {
+    setShowFullItem(data);
+    //TODO show item;
   };
   const Items = items.map((item) => {
     const { data, id } = item;
@@ -42,6 +52,7 @@ function UserItemsList({ onEdit }) {
         id={id}
         onEdit={onEdit}
         onDelete={handleDelete}
+        onShow={handleShow}
       />
     );
   });
@@ -49,6 +60,11 @@ function UserItemsList({ onEdit }) {
   return (
     <div className={style.container}>
       {error && <div className={style.error}>{error}</div>}
+      {showFullItem && (
+        <div>
+          <ShowItem data={showFullItem} onClose={() => setShowFullItem(null)} />
+        </div>
+      )}
       <ul className={style.ul}>{Items}</ul>
     </div>
   );

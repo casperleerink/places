@@ -62,3 +62,7 @@
     }
   }
 }
+
+.confirm-container {
+  @include confirm();
+}
