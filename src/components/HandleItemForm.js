@@ -78,6 +78,7 @@ function HandleItemForm({ item, onSuccess }) {
     //all the data to be uploaded to the document (excluding photo stuff)
     const documentData = {
       userId: user.uid,
+      username: user.displayName,
       uploadDate: serverTimestamp(),
       title: values.title,
       location: values.location,

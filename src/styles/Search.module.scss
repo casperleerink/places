@@ -1,0 +1,58 @@
+@import "./variables";
+.container {
+  background-color: transparent;
+  position: absolute;
+  color: $dark;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  font-size: 0.8rem;
+  //   width: 50%;
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+}
+
+.icon {
+  box-sizing: content-box;
+  padding: 0.7rem;
+  cursor: pointer;
+  background-color: $primary-background;
+  border-radius: 50%;
+  font-size: 1rem;
+  border: 1px solid $dark;
+  //   margin: 0.5rem;
+  font-weight: bold;
+}
+
+.form {
+  display: none;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 0.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.show {
+  display: flex;
+  opacity: 1;
+}
+
+.form input {
+  display: block;
+  color: $dark;
+  border: 1px solid $tertiary;
+  padding: 0.7rem;
+  width: 7rem;
+  background-color: $primary;
+  border-radius: 1rem;
+  outline: none;
+  &:focus {
+    /* when user clicks on input field */
+    border: 1px solid $dark;
+  }
+  @include mq($medium) {
+    width: 10rem;
+  }
+}

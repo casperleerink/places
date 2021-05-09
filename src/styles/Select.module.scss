@@ -1,0 +1,44 @@
+@import "./variables";
+.container {
+  display: block;
+  position: relative;
+  width: 5rem;
+  margin-left: 0.5rem;
+}
+
+.head {
+  display: inline-flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+  color: $dark;
+  padding: 0.7rem;
+  border-radius: 1rem;
+  background-color: $primary-background;
+  border: 1px solid $dark;
+  cursor: pointer;
+}
+
+.options {
+  background-color: $primary-background;
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.options li {
+  cursor: pointer;
+  padding: 0.5rem 0;
+  width: 100%;
+  text-align: center;
+}
+.options li:hover,
+.selected {
+  background-color: $primary-darker;
+}
