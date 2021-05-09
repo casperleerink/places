@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import { UserContext } from "./UserContext";
 import ItemForm from "./ItemForm";
 import { geohashForLocation } from "geofire-common";
+import { Spinner } from "react-bootstrap";
 import { generateDocument, db } from "../hooks/firebase";
 import { newItemValidation } from "../hooks/validation";
 import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
@@ -34,6 +35,7 @@ function HandleItemForm({ item, onSuccess }) {
     location: data ? data.location : null,
   });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState("");
   const { user } = useContext(UserContext);
   const formRef = useRef(null);
   useEffect(() => {
@@ -58,7 +60,13 @@ function HandleItemForm({ item, onSuccess }) {
   //submit new item
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if (user && !user.emailVerified) {
+      setError(
+        "Uh oh.. it seems like you first need to verify your email address!"
+      );
+      formRef.current.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
     //first validate
     const result = newItemValidation(values);
     if (result !== "passed") {
@@ -76,6 +84,9 @@ function HandleItemForm({ item, onSuccess }) {
       description: values.description,
       geohash: geohashForLocation([values.location.lat, values.location.lng]),
     };
+
+    //show loading
+    setLoading("Loading...");
     //then upload photo
     if (values.photoFile) {
       //values.photoFile only exists if new photo is chosen by user
@@ -85,6 +96,7 @@ function HandleItemForm({ item, onSuccess }) {
         const uri = await resizeFile(values.photoFile);
         const fileName = `thumb_${values.photo.replace(/\.[^/.]+$/, "")}.png`;
         const thumbRef = ref(storage, `images/${fileName}`);
+        //upload thumbnail
         const thumbSnapshot = await uploadString(thumbRef, uri, "data_url");
         documentData.thumb = fileName;
         documentData.thumbUrl = await getDownloadURL(thumbSnapshot.ref);
@@ -94,6 +106,7 @@ function HandleItemForm({ item, onSuccess }) {
         documentData.photo = values.photo;
         documentData.photoUrl = await getDownloadURL(snapshot.ref);
       } catch (e) {
+        setLoading("");
         setError(`Error uploading image: ${e.code}`);
         return; //do not proceed with document upload if photo upload gave error
       }
@@ -107,6 +120,7 @@ function HandleItemForm({ item, onSuccess }) {
         await updateDoc(itemRef, { ...documentData });
         onSuccess();
       } catch (e) {
+        setLoading("");
         setError(`Error updating item: ${e}`);
         formRef.current.scrollIntoView({ behavior: "smooth" });
       }
@@ -116,11 +130,13 @@ function HandleItemForm({ item, onSuccess }) {
         await generateDocument("items", null, documentData);
         onSuccess();
       } catch (e) {
+        setLoading("");
         setError(`Error creating new item: ${e.code}`);
         formRef.current.scrollIntoView({ behavior: "smooth" });
       }
     }
   };
+
   return (
     <div ref={formRef}>
       <h1 style={{ letterSpacing: "0.1rem", fontSize: "3rem" }}>
@@ -133,6 +149,11 @@ function HandleItemForm({ item, onSuccess }) {
         error={error}
         center={data ? data.location : null}
       />
+      {loading && (
+        <Spinner animation="border" role="status">
+          <span className="sr-only">{loading}</span>
+        </Spinner>
+      )}
     </div>
   );
 }

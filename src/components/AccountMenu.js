@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
 import { AiOutlineLogout, AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import { UserContext } from "./UserContext";
-import { logOut, getDocument } from "../hooks/firebase";
+import { logOut, getDocument, verificationEmail } from "../hooks/firebase";
 import style from "../styles/AccountMenu.module.scss";
 // import { useTransition, animated as a, config } from "react-spring";
 import UserItemsList from "./UserItemsList";
 import HandleItemForm from "./HandleItemForm";
+import { confirmAlert } from "react-confirm-alert";
 function AccountMenu() {
   const [userInfo, setUserInfo] = useState({});
   const [newItemExpanded, setNewItemExpanded] = useState(false);
@@ -15,11 +16,36 @@ function AccountMenu() {
 
   useEffect(() => {
     let isMounted = true;
-    getDocument("users", user.uid).then((userDoc) => {
-      if (isMounted) {
-        setUserInfo(userDoc);
+    if (user) {
+      //check for verification
+      if (!user.emailVerified) {
+        confirmAlert({
+          customUI: ({ onClose }) => {
+            return (
+              <div className={style["confirm-container"]}>
+                <h1>Please verify your email!</h1>
+                <p>A verification email has been send to {user.email}</p>
+                <button
+                  onClick={() => {
+                    verificationEmail(user);
+                  }}
+                >
+                  Send another email
+                </button>
+                <button onClick={onClose}>Close</button>
+              </div>
+            );
+          },
+        });
+        // setShowUserNeedsVerification(true);
+        return;
       }
-    });
+      getDocument("users", user.uid).then((userDoc) => {
+        if (isMounted) {
+          setUserInfo(userDoc);
+        }
+      });
+    }
     return () => (isMounted = false);
   }, [user]);
   const handleLogOut = () => {

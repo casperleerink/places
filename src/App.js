@@ -13,7 +13,7 @@ function App() {
   //show message on first visit
   useEffect(() => {
     if (storageAvailable("localStorage")) {
-      if (localStorage.getItem("visited")) {
+      if (!localStorage.getItem("visited")) {
         confirmAlert({
           customUI: ({ onClose }) => {
             return (

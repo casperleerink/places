@@ -37,8 +37,6 @@
   <p align="center">
     Places is a project where people can upload photos and videos of unnoticed or beautiful things all around them. People can see these photos on a map that shows where these photo's were taken.
     <br />
-    <a href="https://github.com/casperleerink/places"><strong>Explore the docs »</strong></a>
-    <br />
     <br />
     <a href="https://places-45dcd.web.app/">View Demo</a>
     ·

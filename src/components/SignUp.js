@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { signUp } from "../hooks/firebase";
 import { signUpValidation } from "../hooks/validation";
 import Input from "./Input";
 import style from "../styles/SignUp.module.scss";
+import ReCAPTCHA from "react-google-recaptcha";
 const SignUp = () => {
   const [signUpDetails, setSignUpDetails] = useState({
     username: "",
@@ -18,6 +19,8 @@ const SignUp = () => {
   });
   const [error, setError] = useState(null);
 
+  const recaptchaRef = useRef(null);
+
   const nameValid = signUpValidation.Username({
     username: signUpDetails.username,
   });
@@ -32,23 +35,27 @@ const SignUp = () => {
     event.preventDefault();
     if (!nameValid && !emailValid && !passwordValid) {
       try {
-        await signUp(
-          signUpDetails.email,
-          signUpDetails.password,
-          signUpDetails.username
-        );
-        setSignUpDetails({
-          username: "",
-          email: "",
-          password: "",
-          passwordCheck: "",
-        });
-        setTouched({
-          username: false,
-          email: false,
-          password: false,
-          passwordCheck: false,
-        });
+        //do recaptcha here?
+        const token = await recaptchaRef.current.executeAsync();
+        if (token) {
+          await signUp(
+            signUpDetails.email,
+            signUpDetails.password,
+            signUpDetails.username
+          );
+        }
+        // setSignUpDetails({
+        //   username: "",
+        //   email: "",
+        //   password: "",
+        //   passwordCheck: "",
+        // });
+        // setTouched({
+        //   username: false,
+        //   email: false,
+        //   password: false,
+        //   passwordCheck: false,
+        // });
       } catch (e) {
         setError(`Error signing up: ${e.code}`);
       }
@@ -125,6 +132,13 @@ const SignUp = () => {
             Sign up
           </button>
         </div>
+        <ReCAPTCHA
+          ref={recaptchaRef}
+          size="invisible"
+          theme="dark"
+          badge="inline"
+          sitekey="6Lf0BswaAAAAAEljPn8CZuOD-nEEaDp_xp35RDu4"
+        />
       </form>
     </div>
   );

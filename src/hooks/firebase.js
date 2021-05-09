@@ -12,6 +12,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
+  sendEmailVerification,
 } from "firebase/auth";
 import {
   getFirestore,
@@ -52,11 +54,29 @@ export const signUp = async (email, password, username) => {
   );
   // Signed up
   const { user } = userCredential;
-  return await generateDocument("users", user.uid, {
+  updateProfile(user, { displayName: username });
+
+  verificationEmail(user);
+
+  await generateDocument("users", user.uid, {
     id: user.uid,
     username,
     email: user.email,
   });
+  return user.email;
+};
+
+export const verificationEmail = (user) => {
+  //send email verification
+  if (user && !user.emailVerified) {
+    sendEmailVerification(user)
+      .then(() => {
+        console.log(`verification email send!`);
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  }
 };
 
 export const signIn = async (email, password) => {
